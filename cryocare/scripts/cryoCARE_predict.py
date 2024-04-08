@@ -150,7 +150,7 @@ def main():
                 all_odd = [config['odd']]
 
             for even,odd in zip(all_even,all_odd):
-                out_filename = os.path.join(config['output'], os.path.basename(even))
+                out_filename = os.path.join(config['output'], "denoised_" + os.path.basename(even))
                 denoise(config, mean, std, even=even, odd=odd, output_file=out_filename)
     else:
         # Fall back to original cryoCARE implmentation
