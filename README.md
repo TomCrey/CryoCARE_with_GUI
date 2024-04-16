@@ -63,9 +63,6 @@ Create an empty file called `train_data_config.json`, copy-paste the following t
   "odd": [
     "/path/to/odd.rec"
   ],
-  "mask": [
-    "/path/to/mask.mrc"
-  ],
   "patch_shape": [
     72,
     72,
@@ -75,7 +72,7 @@ Create an empty file called `train_data_config.json`, copy-paste the following t
   "split": 0.9,
   "tilt_axis": "Y",
   "n_normalization_samples": 500,
-  "path": "./"
+  "path": "./output"
 }
 ```
 #### Parameters:
