@@ -94,7 +94,7 @@ To run the training data preparation we run the following command:
 Create an empty file called `train_config.json`, copy-paste the following template and fill it in.
 ```
 {
-  "train_data": "./",
+  "train_data": "./output",
   "epochs": 100,
   "steps_per_epoch": 200,
   "batch_size": 16,
@@ -102,8 +102,8 @@ Create an empty file called `train_config.json`, copy-paste the following templa
   "unet_n_depth": 3,
   "unet_n_first": 16,
   "learning_rate": 0.0004,
-  "model_name": "model_name",
-  "path": "./",
+  "model_name": "model_test",
+  "path": "./output_model",
   "gpu_id": 0
 }
 ```
