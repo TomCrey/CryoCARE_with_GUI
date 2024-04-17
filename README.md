@@ -56,11 +56,7 @@ Create an empty file called `train_data_config.json`, copy-paste the following t
   "odd": [
     "/path/to/odd.rec"
   ],
-  "patch_shape": [
-    72,
-    72,
-    72
-  ],
+  "patch_shape": [72,72,72],
   "num_slices": 1200,
   "split": 0.9,
   "tilt_axis": "Y",
