@@ -50,12 +50,8 @@ To prepare the training data we have to provide all tomograms on which we want t
 Create an empty file called `train_data_config.json`, copy-paste the following template and fill it in.
 ```
 {
-  "even": [
-    "/path/to/even.rec"
-  ],
-  "odd": [
-    "/path/to/odd.rec"
-  ],
+  "even": ["/path/to/even.rec"],
+  "odd": ["/path/to/odd.rec"],
   "patch_shape": [72,72,72],
   "num_slices": 1200,
   "split": 0.9,
