@@ -42,13 +42,6 @@ pip install tensorflow==2.4
 pip install cryoCARE
 ```
 
-### For CUDA 10:
-```
-conda create -n cryocare -c conda-forge -c anaconda python=3 keras-gpu=2.3.1
-conda activate cryocare
-pip install cryoCARE
-```
-
 ## Manual
 cryoCARE uses `.json` configuration files and is run in three steps:
 
