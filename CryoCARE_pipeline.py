@@ -224,30 +224,51 @@ class CryoCARE_pipeline:
 
     def prepare_training_data(self):
         # Method to prepare training data
-        file_path = filedialog.askopenfilename(title="Select train_data_config.json", filetypes=[("JSON files", "*.json")])
-        if file_path:
+        self.update_progress(0)
+        try:
+            file_path = filedialog.askopenfilename(title="Select train_data_config.json", filetypes=[("JSON files", "*.json")])
+            if file_path:
+                result = subprocess.run(["cryoCARE_extract_train_data.py", "--conf", file_path], capture_output=True, text=True)
+                if result.returncode == 0:
+                    self.update_progress(100)
+                    messagebox.showinfo("Success", "Prepare training data completed successfully.")
+                else:
+                    raise Exception(result.stderr)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to prepare training data: {e}")
             self.update_progress(0)
-            subprocess.run(["cryoCARE_extract_train_data.py", "--conf", file_path])
-            self.update_progress(100)
-            messagebox.showinfo("Success", "Prepare training data completed successfully.")
 
     def run_training(self):
         # Method to perform model training
-        file_path = filedialog.askopenfilename(title="Select train_config.json", filetypes=[("JSON files", "*.json")])
-        if file_path:
+        self.update_progress(0)
+        try:
+            file_path = filedialog.askopenfilename(title="Select train_config.json", filetypes=[("JSON files", "*.json")])
+            if file_path:
+                result = subprocess.run(["cryoCARE_train.py", "--conf", file_path], capture_output=True, text=True)
+                if result.returncode == 0:
+                    self.update_progress(100)
+                    messagebox.showinfo("Success", "Training completed successfully.")
+                else:
+                    raise Exception(result.stderr)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to complete training: {e}")
             self.update_progress(0)
-            subprocess.run(["cryoCARE_train.py", "--conf", file_path])
-            self.update_progress(100)
-            messagebox.showinfo("Success", "Training completed successfully.")
 
     def run_prediction(self):
         # Method to execute the prediction
-        file_path = filedialog.askopenfilename(title="Select predict_config.json", filetypes=[("JSON files", "*.json")])
-        if file_path:
+        self.update_progress(0)
+        try:
+            file_path = filedialog.askopenfilename(title="Select predict_config.json", filetypes=[("JSON files", "*.json")])
+            if file_path:
+                result = subprocess.run(["cryoCARE_predict.py", "--conf", file_path], capture_output=True, text=True)
+                if result.returncode == 0:
+                    self.update_progress(100)
+                    messagebox.showinfo("Success", "Prediction completed successfully.")
+                else:
+                    raise Exception(result.stderr)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to complete prediction: {e}")
             self.update_progress(0)
-            subprocess.run(["cryoCARE_predict.py", "--conf", file_path])
-            self.update_progress(100)
-            messagebox.showinfo("Success", "Prediction completed successfully.") 
 
 def main():
     # Create application instance
