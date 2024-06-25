@@ -35,6 +35,8 @@ class CryoCARE_pipeline:
         self.create_menu()
         self.odd_files = []
         self.even_files = []
+        self.progress = ttk.Progressbar(self.master, orient="horizontal", length=300, mode="determinate")
+        self.progress.grid(row=10, column=0, columnspan=2, pady=10)
         self.master.bind("<Configure>", self.on_resize)
 
     def create_widgets(self):
@@ -126,6 +128,9 @@ class CryoCARE_pipeline:
         self.even_label_predict = tk.Label(self.predict_tab, text="Even Files Selected: ")
         self.even_label_predict.grid(row=len(buttons_predict) + 4, column=0, columnspan=2, padx=10, pady=5, sticky="nsew")
 
+    def update_progress(self, value):
+        self.progress['value'] = value
+        self.master.update_idletasks()
 
     def on_resize(self, event):
         # Method called when resizing the window
@@ -218,22 +223,28 @@ class CryoCARE_pipeline:
         # Method to prepare training data
         file_path = filedialog.askopenfilename(title="Select train_data_config.json", filetypes=[("JSON files", "*.json")])
         if file_path:
+            self.update_progress(0)
             subprocess.run(["cryoCARE_extract_train_data.py", "--conf", file_path])
-            print("Prepare training data completed successfully.")
+            self.update_progress(100)
+            messagebox.showinfo("Success", "Prepare training data completed successfully.")
 
     def run_training(self):
         # Method to perform model training
         file_path = filedialog.askopenfilename(title="Select train_config.json", filetypes=[("JSON files", "*.json")])
         if file_path:
+            self.update_progress(0)
             subprocess.run(["cryoCARE_train.py", "--conf", file_path])
-            print("Training completed successfully.") 
+            self.update_progress(100)
+            messagebox.showinfo("Success", "Training completed successfully.")
 
     def run_prediction(self):
         # Method to execute the prediction
         file_path = filedialog.askopenfilename(title="Select predict_config.json", filetypes=[("JSON files", "*.json")])
         if file_path:
+            self.update_progress(0)
             subprocess.run(["cryoCARE_predict.py", "--conf", file_path])
-            print("Prediction completed successfully.") 
+            self.update_progress(100)
+            messagebox.showinfo("Success", "Prediction completed successfully.") 
 
 def main():
     # Create application instance
