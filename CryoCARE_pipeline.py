@@ -153,7 +153,7 @@ class CryoCARE_pipeline:
     def import_odd_files(self):
         # Method to import odd files
         files = filedialog.askopenfilenames(title="Sélectionner les fichiers impairs", filetypes=[("All files", "*.*")])
-            if files:
+        if files:
             valid_files = [file for file in files if self.validate_file(file)]
             if valid_files:
                 self.odd_files = valid_files
@@ -166,13 +166,13 @@ class CryoCARE_pipeline:
         # Method to import even files
         files = filedialog.askopenfilenames(title="Sélectionner les fichiers pairs", filetypes=[("All files", "*.*")])
         if files:
-        valid_files = [file for file in files if self.validate_file(file)]
-        if valid_files:
-            self.even_files = valid_files
-            self.even_label.config(text=f"Even Files Selected: {', '.join(valid_files)}")
-            self.even_label_predict.config(text="Even Files Selected: " + ", ".join(valid_files))
-        else:
-            messagebox.showerror("Error", "No valid files selected.")
+            valid_files = [file for file in files if self.validate_file(file)]
+            if valid_files:
+                self.even_files = valid_files
+                self.even_label.config(text=f"Even Files Selected: {', '.join(valid_files)}")
+                self.even_label_predict.config(text="Even Files Selected: " + ", ".join(valid_files))
+            else:
+                messagebox.showerror("Error", "No valid files selected.")
 
     def validate_file(self, file):
         # Add your file validation logic here
