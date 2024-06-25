@@ -270,6 +270,4 @@ class CryoCARE_pipeline:
 if __name__ == "__main__":
     root = tk.Tk()
     app = CryoCARE_pipeline(root)
-
-    # Start GUI main loop
     root.mainloop()
