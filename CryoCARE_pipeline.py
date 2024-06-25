@@ -153,19 +153,31 @@ class CryoCARE_pipeline:
     def import_odd_files(self):
         # Method to import odd files
         files = filedialog.askopenfilenames(title="Sélectionner les fichiers impairs", filetypes=[("All files", "*.*")])
-        if files:
-            self.odd_files = files
-            self.odd_label.config(text=f"Odd Files Selected: {', '.join(files)}")
-            self.odd_label_predict.config(text="Odd Files Selected: " + ", ".join(files))
+            if files:
+            valid_files = [file for file in files if self.validate_file(file)]
+            if valid_files:
+                self.odd_files = valid_files
+                self.odd_label.config(text=f"Odd Files Selected: {', '.join(valid_files)}")
+                self.odd_label_predict.config(text="Odd Files Selected: " + ", ".join(valid_files))
+            else:
+                messagebox.showerror("Error", "No valid files selected.")
 
     def import_even_files(self):
         # Method to import even files
         files = filedialog.askopenfilenames(title="Sélectionner les fichiers pairs", filetypes=[("All files", "*.*")])
         if files:
-            self.even_files = files
-            self.even_label.config(text=f"Even Files Selected: {', '.join(files)}")
-            self.even_label_predict.config(text="Even Files Selected: " + ", ".join(files))
+        valid_files = [file for file in files if self.validate_file(file)]
+        if valid_files:
+            self.even_files = valid_files
+            self.even_label.config(text=f"Even Files Selected: {', '.join(valid_files)}")
+            self.even_label_predict.config(text="Even Files Selected: " + ", ".join(valid_files))
+        else:
+            messagebox.showerror("Error", "No valid files selected.")
 
+    def validate_file(self, file):
+        # Add your file validation logic here
+        valid_extensions = [".mrc", ".tif"]
+        return any(file.endswith(ext) for ext in valid_extensions)
 
     def generate_train_data_config(self):
         # Method to generate JSON configuration file for training data
