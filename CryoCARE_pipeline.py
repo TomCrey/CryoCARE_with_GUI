@@ -190,6 +190,14 @@ class CryoCARE_pipeline:
         # Placeholder for a method that validates the file
         return os.path.isfile(file_path)
 
+    def save_json_file(self, data, filename):
+        # Method to save a JSON object to a file
+        file_path = filedialog.asksaveasfilename(title=f"Save {filename}", defaultextension=".json", initialfile=filename)
+        if file_path:
+            with open(file_path, 'w') as f:
+                json.dump(data, f, indent=4)
+            messagebox.showinfo("Success", f"{filename} has been generated and saved successfully.")
+
     def generate_train_data_config(self):
         # Method to generate the training data configuration file
         if not self.odd_files_training or not self.even_files_training:
@@ -197,21 +205,26 @@ class CryoCARE_pipeline:
             return
         
         # JSON content creation
-        data_config = {
-            "training_data": {
-                "odd_files": self.odd_files_training,
-                "even_files": self.even_files_training
-            }
+        data = {
+            "even": self.even_files_training,
+            "odd": self.odd_files_training,
+            "patch_shape": [72,72,72],
+            "num_slices": 1200,
+            "split": 0.9,
+            "tilt_axis": "Y",
+            "n_normalization_samples": 500,
+            "path": "./output"
         }
-        with open('train_data_config.json', 'w') as f:
-            json.dump(data_config, f, indent=4)
-        messagebox.showinfo("Success", "train_data_config.json generated successfully.")
+        self.save_json_file(data, "train_data_config.json")
 
     def prepare_training_data(self):
         # Method to prepare the training data
         try:
             self.update_progress(0)
-            subprocess.run([sys.executable, 'cryoCARE_extract_train_data.py', 'train_data_config.json'], check=True)
+            file_path = filedialog.askopenfilename(title="Select train_data_config.json", filetypes=[("JSON files", "*.json")])
+            if file_path:
+                subprocess.run(["cryoCARE_extract_train_data.py", "--conf", file_path])
+                print("Prepare training data completed successfully.")
             self.update_progress(100)
             messagebox.showinfo("Success", "Training data prepared successfully.")
         except subprocess.CalledProcessError as e:
@@ -220,20 +233,31 @@ class CryoCARE_pipeline:
 
     def generate_train_config(self):
         # Method to generate the training configuration file
-        train_config = {
-            # Placeholder for actual configuration settings
+        data = {
+            "train_data": "./output",
+            "epochs": 100,
+            "steps_per_epoch": 200,
+            "batch_size": 16,
+            "unet_kern_size": 3,
+            "unet_n_depth": 3,
+            "unet_n_first": 16,
+            "learning_rate": 0.0004,
+            "model_name": "model_test",
+            "path": "./output_model",
+            "gpu_id": 0
         }
-        with open('train_config.json', 'w') as f:
-            json.dump(train_config, f, indent=4)
-        messagebox.showinfo("Success", "train_config.json generated successfully.")
+        self.save_json_file(data, "train_config.json")
 
     def run_training(self):
         # Method to run the training process
         try:
             self.update_progress(0)
-            subprocess.run([sys.executable, 'cryoCARE_train.py', 'train_config.json'], check=True)
+            file_path = filedialog.askopenfilename(title="Select train_config.json", filetypes=[("JSON files", "*.json")])
+            if file_path:
+                subprocess.run(["cryoCARE_train.py", "--conf", file_path])            
             self.update_progress(100)
             messagebox.showinfo("Success", "Training completed successfully.")
+
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to run training. Error: {str(e)}")
             self.update_progress(0)
@@ -245,31 +269,38 @@ class CryoCARE_pipeline:
             return
 
         # JSON content creation
-        predict_config = {
-            "prediction_data": {
-                "odd_files": self.odd_files_prediction,
-                "even_files": self.even_files_prediction
-            }
+        data = {
+            "path": "./output_model/model_test.tar.gz",
+            "even": self.even_files,
+            "odd": self.odd_files,
+            "n_tiles": [4,4,4],
+            "output": "denoised_files",
+            "overwrite": False,
+            "gpu_id": 0
         }
-        with open('predict_config.json', 'w') as f:
-            json.dump(predict_config, f, indent=4)
-        messagebox.showinfo("Success", "predict_config.json generated successfully.")
+        self.save_json_file(data, "predict_config.json")
 
     def run_prediction(self):
         # Method to run the prediction process
         try:
             self.update_progress(0)
-            subprocess.run([sys.executable, 'cryoCARE_predict.py', 'predict_config.json'], check=True)
+            file_path = filedialog.askopenfilename(title="Select predict_config.json", filetypes=[("JSON files", "*.json")])
+            if file_path:
+                subprocess.run(["cryoCARE_predict.py", "--conf", file_path])
             self.update_progress(100)
             messagebox.showinfo("Success", "Prediction completed successfully.")
+
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to run prediction. Error: {str(e)}")
             self.update_progress(0)
 
-
-if __name__ == "__main__":
+def main():
+    # Create application instance
     root = tk.Tk()
     app = CryoCARE_pipeline(root)
 
     # Start GUI main loop
     root.mainloop()
+
+if __name__ == "__main__":
+    main()
