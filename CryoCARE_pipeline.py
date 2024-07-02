@@ -36,8 +36,6 @@ class CryoCARE_pipeline:
         self.even_files_training = []
         self.odd_files_prediction = []
         self.even_files_prediction = []
-        self.progress = ttk.Progressbar(self.master, orient="horizontal", length=300, mode="determinate")
-        self.progress.grid(row=10, column=0, columnspan=2, pady=10)
         self.master.bind("<Configure>", self.on_resize)
 
     def create_widgets(self):
@@ -119,10 +117,6 @@ class CryoCARE_pipeline:
         self.odd_label_predict.grid(row=len(buttons_predict) + 3, column=0, columnspan=2, padx=10, pady=5, sticky="nsew")
         self.even_label_predict = tk.Label(self.predict_tab, text="Even Files Selected: ")
         self.even_label_predict.grid(row=len(buttons_predict) + 4, column=0, columnspan=2, padx=10, pady=5, sticky="nsew")
-
-    def update_progress(self, value):
-        self.progress['value'] = value
-        self.master.update_idletasks()
 
     def on_resize(self, event):
         # Method called when resizing the window
@@ -220,16 +214,13 @@ class CryoCARE_pipeline:
     def prepare_training_data(self):
         # Method to prepare the training data
         try:
-            self.update_progress(0)
             file_path = filedialog.askopenfilename(title="Select train_data_config.json", filetypes=[("JSON files", "*.json")])
             if file_path:
                 subprocess.run(["cryoCARE_extract_train_data.py", "--conf", file_path])
                 print("Prepare training data completed successfully.")
-            self.update_progress(100)
             messagebox.showinfo("Success", "Training data prepared successfully.")
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to prepare training data. Error: {str(e)}")
-            self.update_progress(0)
 
     def generate_train_config(self):
         # Method to generate the training configuration file
@@ -251,16 +242,14 @@ class CryoCARE_pipeline:
     def run_training(self):
         # Method to run the training process
         try:
-            self.update_progress(0)
+
             file_path = filedialog.askopenfilename(title="Select train_config.json", filetypes=[("JSON files", "*.json")])
             if file_path:
                 subprocess.run(["cryoCARE_train.py", "--conf", file_path])            
-            self.update_progress(100)
             messagebox.showinfo("Success", "Training completed successfully.")
 
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to run training. Error: {str(e)}")
-            self.update_progress(0)
 
     def generate_predict_config(self):
         # Method to generate the prediction configuration file
@@ -283,16 +272,13 @@ class CryoCARE_pipeline:
     def run_prediction(self):
         # Method to run the prediction process
         try:
-            self.update_progress(0)
             file_path = filedialog.askopenfilename(title="Select predict_config.json", filetypes=[("JSON files", "*.json")])
             if file_path:
                 subprocess.run(["cryoCARE_predict.py", "--conf", file_path])
-            self.update_progress(100)
             messagebox.showinfo("Success", "Prediction completed successfully.")
 
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to run prediction. Error: {str(e)}")
-            self.update_progress(0)
 
 def main():
     # Create application instance
