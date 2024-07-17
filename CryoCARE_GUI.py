@@ -1,4 +1,4 @@
-## Written by TomCrey (tom.crey@ibs.fr)
+## Written by TomCrey (titom.crey@gmail.com)
 """
 Program to set up a graphical interface for the CryoCARE pipeline
 
