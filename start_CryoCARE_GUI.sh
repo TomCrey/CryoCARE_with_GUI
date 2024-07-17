@@ -2,5 +2,5 @@
 
 eval "$(conda shell.bash hook)"
 conda activate cryocare_11
-python CryoCARE_pipeline.py
+python CryoCARE_GUI.py
 conda deactivate
